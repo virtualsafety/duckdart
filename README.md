@@ -1,5 +1,5 @@
 # duckdart
-To respect [duckdb](https://github.com/duckdb/duckdb), name it "duckart"
+To respect [duckdb](https://github.com/duckdb/duckdb), name it "duckart". A c++ implement of ART.
 
 #### The Adaptive Radix Tree
 * https://db.in.tum.de/~leis/papers/ART.pdf
