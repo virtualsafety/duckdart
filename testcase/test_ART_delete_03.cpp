@@ -37,7 +37,9 @@ int main() {
     Node v_node;
     reference<Node> ref_leaf(v_node);
     string_t test_string1("Hello, World!");
-    Value value1 =  Value::CreateValue(test_string1);
+    uint32_t  test_uint32 = static_cast<uint32_t >(1234567);
+    std::cout << "test_uint16:"<< test_uint32 << std::endl;
+    Value value1 =  Value::CreateValue(test_uint32);
     Leaf& leaf = Leaf::New(art, ref_leaf, value1);
 
     node = art.root.get();
@@ -129,7 +131,10 @@ int main() {
      //search   
     auto s_node = art.Search(node,key1,0);
     auto& s_leaf= Node::RefMutable<Leaf>(art, s_node, NType::LEAF);
-    std::cout <<"value of s_leaf:" << Value::ExtractValue<string_t>(s_leaf.value).GetData() << std::endl;
+    //string_t
+    //std::cout <<"value of s_leaf:" << Value::ExtractValue<string_t>(s_leaf.value).GetData()  << std::endl;
+    //uint16_t
+    std::cout <<"value of s_leaf:" <<  Value::ExtractValue<uint32_t>(s_leaf.value)   << std::endl;
    
 
     // delete
