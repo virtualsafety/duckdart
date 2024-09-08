@@ -93,46 +93,29 @@ bool ART::Insert(Node& node, const ARTKey& key, const Node& leaf, idx_t depth) {
             auto& n4 = Node::RefMutable<Node4>(*this, ref_node4, NType::NODE_4);
 
             //(1) add first Leaf to Node4
-            Node l_child;
-            std::cout << " mis_match_pos: " << mis_match_pos << std::endl;
+            Node l_child;          
             auto l_prefix_byte =
                 Prefix::GetByte(*this, l_prefix, mis_match_pos);
-            Prefix::Split(*this, l_prefix, l_child, mis_match_pos);
-
-            std::cout << "l_prefix_byte: " << static_cast<char>(l_prefix_byte)
-                      << std::endl;
+            Prefix::Split(*this, l_prefix, l_child, mis_match_pos);        
 
             Node4::InsertChild(*this, node4, l_prefix_byte, node);
             // set first half  of Prefix chain  to prefix of Node4
             n4.prefix = l_first;
             // set second half Prefix chain to leaf
-            // leaf_node.prefix = l_child;
-            LOG_DEBUG("for debug 0: " + l_child.AddrToString());
+            // leaf_node.prefix = l_child;         
             node.SetPrefix(*this, l_child);
-
-            LOG_DEBUG("for debug 1: " + node4.GetPrefix(*this).AddrToString());
-            Prefix::Print(*this, n4.prefix);
-
-            LOG_DEBUG("for debug 2: " + node.GetPrefix(*this).AddrToString());
-            Prefix::Print(*this, leaf_node.prefix);
-
+      
             //(2)add second Leaf to Node4
             auto r_prefix_byte = key[depth];
-            std::cout << "r_prefix_byte : " << static_cast<char>(r_prefix_byte)
-                      << std::endl;
 
             Node r_prefix;
             reference<Node> ref_prefix(r_prefix);
             Prefix::New(*this, ref_prefix, key, depth + 1, key.len - depth - 1);
             leaf_node_new.prefix = r_prefix;
-            Node4::InsertChild(*this, node4, r_prefix_byte, leaf);
-            Prefix::Print(*this, leaf_node_new.prefix);
-            LOG_DEBUG("for debug 3: " + r_prefix.AddrToString());
+            Node4::InsertChild(*this, node4, r_prefix_byte, leaf);                  
 
             // swap pointer
-            Node::Swap(node, node4);
-
-            std::cout << n4.ToString(*this) << std::endl;
+            Node::Swap(node, node4);  
 
             return true;
         }
@@ -228,9 +211,7 @@ bool ART::InsertIntoNode(Node& node, const ARTKey& key, const Node& leaf,
             // add child
             auto& leaf_node_new =
                 Node::RefMutable<Leaf>(*this, leaf, NType::LEAF);
-            auto c_prefix_byte = key[depth];
-            std::cout << "prefix byte of child : "
-                      << static_cast<char>(c_prefix_byte) << std::endl;
+            auto c_prefix_byte = key[depth];       
 
             Node c_prefix;
             reference<Node> ref_c_prefix(c_prefix);
@@ -262,9 +243,7 @@ bool ART::InsertIntoNode(Node& node, const ARTKey& key, const Node& leaf,
             auto& leaf_node =
                 Node::RefMutable<Leaf>(*this, leaf, NType::LEAF);
             leaf_node.prefix = ref_prefix;
-
-            LOG_DEBUG("for debug 4: " + prefix_node.AddrToString());
-
+         
             Node::InsertChild(*this, node, prefix_byte, leaf);
 
             return true;
