@@ -37,7 +37,7 @@ int main() {
     Node v_node;
     reference<Node> ref_leaf(v_node);
     string_t test_string1("Hello, World!");
-    Value value1 =  Value::CreateValue(12345);
+    Value value1 =  Value::CreateValue(test_string1);
     Leaf& leaf = Leaf::New(art, ref_leaf, value1);
 
     node = art.root.get();
@@ -125,6 +125,12 @@ int main() {
     // print Node 
     std::cout << "-------------after insert-------------" << std::endl;
     Node::Print(art, node);
+
+     //search   
+    auto s_node = art.Search(node,key1,0);
+    auto& s_leaf= Node::RefMutable<Leaf>(art, s_node, NType::LEAF);
+    std::cout <<"value of s_leaf:" << Value::ExtractValue<string_t>(s_leaf.value).GetData() << std::endl;
+   
 
     // delete
     auto bool_flag = art.Delete(node, key1, 0);
