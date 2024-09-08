@@ -70,6 +70,12 @@ class Value {
         val.len = sizeof(element);
     }
 
+    template <class T>
+    static inline T ExtractValue(Value &val) {
+        auto result = Value::ExtractData<T>(val);
+        return result;
+    }
+
 	void Print() const {
         std::cout << "Value: length = " << len << ", data = ";
         for (uint32_t i = 0; i < len; ++i) {
@@ -92,6 +98,12 @@ class Value {
         Radix::EncodeData<T>(data, value);
         return data;
     }
+
+    template <class T>
+    static inline T ExtractData(data_ptr_t value) {        
+        auto result =Radix::EncodeData<T>(value);
+        return result;
+    }
 };
 
 template <>
@@ -99,6 +111,10 @@ Value Value::CreateValue(string_t value);
 template <>
 Value Value::CreateValue(const char *value);
 template <>
-void Value::CreateValue( Value &key, string_t value);
+void Value::CreateValue( Value &val, string_t value);
+
+//
+template <>
+string_t Value::ExtractValue(Value &val);
 
 }  // namespace duckart
