@@ -27,6 +27,11 @@ struct Radix {
         throw NotImplementedException("Cannot create data from this type");
     }
 
+   template <class T>
+    static inline T DecodeData(data_ptr_t dataptr) {
+        throw NotImplementedException("Cannot decode data to this type");
+    }
+
     static inline void EncodeStringDataPrefix(data_ptr_t dataptr,
                                               string_t value,
                                               idx_t prefix_len) {
@@ -90,6 +95,55 @@ inline void Radix::EncodeData(data_ptr_t dataptr, uint32_t value) {
 template <>
 inline void Radix::EncodeData(data_ptr_t dataptr, uint64_t value) {
     Store<uint64_t>(BSwap<uint64_t>(value), dataptr);
+}
+
+//docde
+template <>
+inline int8_t Radix::DecodeData(data_ptr_t dataptr) {
+    uint8_t bytes = Load<uint8_t>(dataptr);
+    bytes = FlipSign(bytes);
+    return Load<int8_t>(data_ptr_cast(&bytes));
+}
+
+template <>
+inline int16_t Radix::DecodeData(data_ptr_t dataptr) {
+    uint16_t bytes = BSwap<uint16_t>(Load<uint16_t>(dataptr));
+    dataptr[0] = FlipSign(dataptr[0]);
+    return Load<int16_t>(data_ptr_cast(&bytes));
+}
+
+template <>
+inline int32_t Radix::DecodeData(data_ptr_t dataptr) {
+    uint32_t bytes = BSwap<uint32_t>(Load<uint32_t>(dataptr));
+    dataptr[0] = FlipSign(dataptr[0]);
+    return Load<int32_t>(data_ptr_cast(&bytes));
+}
+
+template <>
+inline int64_t Radix::DecodeData(data_ptr_t dataptr) {
+    uint64_t bytes = BSwap<uint64_t>(Load<uint64_t>(dataptr));
+    dataptr[0] = FlipSign(dataptr[0]);
+    return Load<int64_t>(data_ptr_cast(&bytes));
+}
+
+template <>
+inline uint8_t Radix::DecodeData(data_ptr_t dataptr) {
+    return Load<uint8_t>(dataptr);
+}
+
+template <>
+inline uint16_t Radix::DecodeData(data_ptr_t dataptr) {
+    return BSwap<uint16_t>(Load<uint16_t>(dataptr));
+}
+
+template <>
+inline uint32_t Radix::DecodeData(data_ptr_t dataptr) {
+    return BSwap<uint32_t>(Load<uint32_t>(dataptr));
+}
+
+template <>
+inline uint64_t Radix::DecodeData(data_ptr_t dataptr) {
+    return BSwap<uint64_t>(Load<uint64_t>(dataptr));
 }
 
 }  // namespace duckart
