@@ -72,7 +72,7 @@ class Value {
 
     template <class T>
     static inline T ExtractValue(Value &val) {
-        auto result = Value::ExtractData<T>(val);
+        auto result = Value::ExtractData<T>(val.data);
         return result;
     }
 
@@ -101,7 +101,7 @@ class Value {
 
     template <class T>
     static inline T ExtractData(data_ptr_t value) {        
-        auto result =Radix::EncodeData<T>(value);
+        auto result =Radix::DecodeData<T>(value);
         return result;
     }
 };
