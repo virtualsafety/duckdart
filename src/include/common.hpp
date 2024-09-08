@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <cassert>
 #include <functional> 
+#include <type_traits>
+
 
 #define D_ASSERT assert
 
@@ -48,6 +50,11 @@ template <typename T>
 constexpr T MinValue(T a, T b) {
     return a < b ? a : b;
 }
+
+template <class T>
+struct MakeUnsigned {
+	using type = typename std::make_unsigned<T>::type;
+};
 
 //! node type
 enum class NType : uint8_t {
