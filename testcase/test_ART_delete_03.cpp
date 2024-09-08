@@ -35,8 +35,6 @@ int main() {
 
     // leaf
     Node v_node;
-    std::cout << " leaf node being constructor 1:" << v_node.AddrToString()
-              << std::endl;
     reference<Node> ref_leaf(v_node);
     string_t test_string1("Hello, World!");
     Value value1 =  Value::CreateValue(12345);
@@ -84,7 +82,7 @@ int main() {
     // key4
     ARTKey key4 =
         ARTKey::CreateARTKey<string_t>("123456789cccc");  // test case 2
-    key3.Print();
+    key4.Print();
 
     // leaf4
     Node lnode4;
@@ -98,7 +96,7 @@ int main() {
     // key5
     ARTKey key5 =
         ARTKey::CreateARTKey<string_t>("123456789dddd");  // test case 2
-    key3.Print();
+    key5.Print();
 
     // leaf5
     Node lnode5;
@@ -113,7 +111,7 @@ int main() {
      // key6
     ARTKey key6 =
         ARTKey::CreateARTKey<string_t>("623456789mmmm");  // test case 2
-    key3.Print();
+    key6.Print();
 
     // leaf6
     Node lnode6;
