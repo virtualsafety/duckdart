@@ -52,4 +52,32 @@ bool Value::operator==(const Value &k) const {
 	return true;
 }
 
+//
+template <>
+string_t Value::ExtractValue(Value &val){
+     if (val.len == 0 || val.data == nullptr) {
+            return string_t("");  // Return an empty string if the Value is empty
+        }
+
+        // Subtract 1 from len to exclude the null terminator
+        size_t str_len = val.len - 1;
+
+        if (str_len <= 11) {
+            // If the string fits in the inlined storage
+            return string_t(reinterpret_cast<const char*>(val.data));
+        } else {
+            // If the string needs to use pointer storage
+            string_t result("");  // Create an empty string_t
+            result.value.pointer.length = str_len;
+            memcpy(result.value.pointer.prefix, val.data, 4);
+            
+            // Allocate new memory for the string content
+            result.value.pointer.ptr = new char[str_len + 1];
+            memcpy(result.value.pointer.ptr, val.data, str_len);
+            result.value.pointer.ptr[str_len] = '\0';  // Ensure null-termination
+
+            return result;
+}
+}
+
 } // namespace duckar
