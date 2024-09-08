@@ -65,9 +65,9 @@ class Value {
     }
 
     template <class T>
-    static inline void CreateValue(Value &key, T element) {
-        key.data = Value::CreateData<T>(element);
-        key.len = sizeof(element);
+    static inline void CreateValue(Value &val, T element) {
+        val.data = Value::CreateData<T>(element);
+        val.len = sizeof(element);
     }
 
 	void Print() const {
