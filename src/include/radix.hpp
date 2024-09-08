@@ -4,12 +4,15 @@
 
 #include <cfloat>
 #include <cstring>  // strlen() on Solaris
+ 
 
 #include "bswap.hpp"
 #include "common.hpp"
 #include "exception.hpp"
+#include "string_type.hpp"
+ 
 
-namespace duckart {
+namespace duckart { 
 
 struct Radix {
    public:
@@ -43,38 +46,41 @@ struct Radix {
     }
 
     static inline uint8_t FlipSign(uint8_t key_byte) { return key_byte ^ 128; }
+
+    private:
+	template <class T>
+	static void EncodeSigned(data_ptr_t dataptr, T value);
+	template <class T>
+	static T DecodeSigned(data_ptr_t input);
 };
+
+template <class T>
+void Radix::EncodeSigned(data_ptr_t dataptr, T value) {
+	using UNSIGNED = typename MakeUnsigned<T>::type;   
+	UNSIGNED bytes;
+	Store<T>(value, data_ptr_cast(&bytes));
+	Store<UNSIGNED>(BSwap(bytes), dataptr);
+	dataptr[0] = FlipSign(dataptr[0]);
+}
 
 template <>
 inline void Radix::EncodeData(data_ptr_t dataptr, int8_t value) {
-    uint8_t bytes;  // dance around signedness conversion check
-    Store<int8_t>(value, data_ptr_cast(&bytes));
-    Store<uint8_t>(bytes, dataptr);
-    dataptr[0] = FlipSign(dataptr[0]);
+	EncodeSigned<int8_t>(dataptr, value);
 }
 
 template <>
 inline void Radix::EncodeData(data_ptr_t dataptr, int16_t value) {
-    uint16_t bytes;
-    Store<int16_t>(value, data_ptr_cast(&bytes));
-    Store<uint16_t>(BSwap<uint16_t>(bytes), dataptr);
-    dataptr[0] = FlipSign(dataptr[0]);
+	EncodeSigned<int16_t>(dataptr, value);
 }
 
 template <>
 inline void Radix::EncodeData(data_ptr_t dataptr, int32_t value) {
-    uint32_t bytes;
-    Store<int32_t>(value, data_ptr_cast(&bytes));
-    Store<uint32_t>(BSwap<uint32_t>(bytes), dataptr);
-    dataptr[0] = FlipSign(dataptr[0]);
+	EncodeSigned<int32_t>(dataptr, value);
 }
 
 template <>
 inline void Radix::EncodeData(data_ptr_t dataptr, int64_t value) {
-    uint64_t bytes;
-    Store<int64_t>(value, data_ptr_cast(&bytes));
-    Store<uint64_t>(BSwap<uint64_t>(bytes), dataptr);
-    dataptr[0] = FlipSign(dataptr[0]);
+	EncodeSigned<int64_t>(dataptr, value);
 }
 
 template <>
@@ -97,53 +103,55 @@ inline void Radix::EncodeData(data_ptr_t dataptr, uint64_t value) {
     Store<uint64_t>(BSwap<uint64_t>(value), dataptr);
 }
 
-//docde
-template <>
-inline int8_t Radix::DecodeData(data_ptr_t dataptr) {
-    uint8_t bytes = Load<uint8_t>(dataptr);
-    bytes = FlipSign(bytes);
-    return Load<int8_t>(data_ptr_cast(&bytes));
+// decode
+template <class T>
+T Radix::DecodeSigned(data_ptr_t input) {
+	using UNSIGNED = typename MakeUnsigned<T>::type;   
+	UNSIGNED bytes = Load<UNSIGNED>(input);
+	auto bytes_data = data_ptr_cast(&bytes);
+	bytes_data[0] = FlipSign(bytes_data[0]);
+	T result;
+	Store<UNSIGNED>(BSwap(bytes), data_ptr_cast(&result));
+	return result;
 }
 
 template <>
-inline int16_t Radix::DecodeData(data_ptr_t dataptr) {
-    uint16_t bytes = BSwap<uint16_t>(Load<uint16_t>(dataptr));
-    dataptr[0] = FlipSign(dataptr[0]);
-    return Load<int16_t>(data_ptr_cast(&bytes));
+inline int8_t Radix::DecodeData(data_ptr_t input) {
+	return DecodeSigned<int8_t>(input);
 }
 
 template <>
-inline int32_t Radix::DecodeData(data_ptr_t dataptr) {
-    uint32_t bytes = BSwap<uint32_t>(Load<uint32_t>(dataptr));
-    dataptr[0] = FlipSign(dataptr[0]);
-    return Load<int32_t>(data_ptr_cast(&bytes));
+inline int16_t Radix::DecodeData(data_ptr_t input) {
+	return DecodeSigned<int16_t>(input);
 }
 
 template <>
-inline int64_t Radix::DecodeData(data_ptr_t dataptr) {
-    uint64_t bytes = BSwap<uint64_t>(Load<uint64_t>(dataptr));
-    dataptr[0] = FlipSign(dataptr[0]);
-    return Load<int64_t>(data_ptr_cast(&bytes));
+inline int32_t Radix::DecodeData(data_ptr_t input) {
+	return DecodeSigned<int32_t>(input);
 }
 
 template <>
-inline uint8_t Radix::DecodeData(data_ptr_t dataptr) {
-    return Load<uint8_t>(dataptr);
+inline int64_t Radix::DecodeData(data_ptr_t input) {
+	return DecodeSigned<int64_t>(input);
 }
 
 template <>
-inline uint16_t Radix::DecodeData(data_ptr_t dataptr) {
-    return BSwap<uint16_t>(Load<uint16_t>(dataptr));
+inline uint8_t Radix::DecodeData(data_ptr_t input) {
+	return Load<uint8_t>(input);
 }
 
 template <>
-inline uint32_t Radix::DecodeData(data_ptr_t dataptr) {
-    return BSwap<uint32_t>(Load<uint32_t>(dataptr));
+inline uint16_t Radix::DecodeData(data_ptr_t input) {
+	return BSwap(Load<uint16_t>(input));
 }
 
 template <>
-inline uint64_t Radix::DecodeData(data_ptr_t dataptr) {
-    return BSwap<uint64_t>(Load<uint64_t>(dataptr));
+inline uint32_t Radix::DecodeData(data_ptr_t input) {
+	return BSwap(Load<uint32_t>(input));
 }
 
+template <>
+inline uint64_t Radix::DecodeData(data_ptr_t input) {
+	return BSwap(Load<uint64_t>(input));
+}
 }  // namespace duckart
