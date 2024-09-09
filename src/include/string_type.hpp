@@ -1,4 +1,7 @@
 // https://github.com/duckdb/duckdb/blob/main/src/include/duckdb/common/types/string_type.hpp
+// https://arrow.apache.org/docs/format/Columnar.html#variable-size-binary-view-layout
+// https://www.influxdata.com/blog/faster-queries-with-stringview-part-one-influxdb/
+
 #pragma once
 
 #include <algorithm>
