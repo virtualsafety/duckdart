@@ -30,14 +30,14 @@ Value Value::CreateValue(const char* value) {
 }
 
 template <>
-void Value::CreateValue(Value& key, string_t value) {
+void Value::CreateValue(Value& val, string_t value) {
     /*
     auto len = value.GetSize();
     key.data = new data_t[len];
     key.len = len;
     std::memcpy(key.data, value.GetData(), len);
     */
-    key = Value::CreateValue<string_t>(value);
+    val = Value::CreateValue<string_t>(value);
 }
 
 bool Value::operator==(const Value &k) const {
