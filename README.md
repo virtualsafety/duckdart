@@ -11,3 +11,6 @@ To show respect for [duckdb](https://github.com/duckdb/duckdb), name it "duckart
 
 #### Prefix visualization
 * https://excalidraw.com/#json=j82LsakzJavwgGoMVahmw,2588fKf6RuZrpgGG-IjzbQ
+
+#### DuckDB: Tuning ART indexes for duplicate values
+* https://github.com/duckdb/duckdb/pull/13373
