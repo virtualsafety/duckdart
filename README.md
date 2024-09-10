@@ -12,5 +12,6 @@ To show respect for [duckdb](https://github.com/duckdb/duckdb), name it "duckart
 #### Prefix visualization
 * https://excalidraw.com/#json=j82LsakzJavwgGoMVahmw,2588fKf6RuZrpgGG-IjzbQ
 
-#### DuckDB: Tuning ART indexes for duplicate values
+#### DuckDB: Tuning ART indexes for duplicate values in V1.1.0
 * https://github.com/duckdb/duckdb/pull/13373
+* https://duckdb.org/2024/09/09/announcing-duckdb-110.html#nested-art-rework-foreign-key-load-speed-up
